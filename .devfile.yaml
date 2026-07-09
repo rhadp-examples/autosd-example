@@ -9,7 +9,7 @@ metadata:
 components:
   - name: runtime
     container:
-      image: ghcr.io/rhadp/codespaces:latest
+      image: ghcr.io/rhadp-examples/codespaces:latest
       memoryLimit: "4Gi"
       memoryRequest: "1Gi"
       cpuLimit: "4"
@@ -19,12 +19,12 @@ components:
       #env:
       #  - name: JUMPSTARTER_GRPC_ENDPOINT
       #    value: "grpc.rhadp-jumpstarter.apps.CLUSTER_BASE_DOMAIN"
-commands:
-  - id: init-workspace
-    exec:
-      component: runtime
-      commandLine: |
-        /home/tooling/.scripts/init-workspace
-events:
-  postStart:
-    - init-workspace
+#commands:
+#  - id: init-workspace
+#    exec:
+#      component: runtime
+#      commandLine: |
+#        /home/tooling/.scripts/init-workspace
+#events:
+#  postStart:
+#    - init-workspace

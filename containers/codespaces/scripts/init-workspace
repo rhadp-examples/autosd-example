@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+mkdir -p /home/user/.config/gcloud/configurations
+mkdir -p /home/user/.config/containers/certs.d
