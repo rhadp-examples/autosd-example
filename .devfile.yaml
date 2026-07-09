@@ -24,7 +24,7 @@ commands:
     exec:
       component: runtime
       commandLine: |
-        /home/tooling/.scripts/init-workspace
+        /usr/local/bin/init-workspace
 events:
   postStart:
     - init-workspace
