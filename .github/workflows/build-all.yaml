@@ -5,11 +5,10 @@ on:
   #pull_request:
   #  branches:
   #    - 'main'
-  push:
-    branches:
-      - 'main'
-      - 'release-*'
-
+  #push:
+  #  branches:
+  #    - 'main'
+  
 jobs:
   build-rhas-starter:
     uses: ./.github/workflows/build.yaml

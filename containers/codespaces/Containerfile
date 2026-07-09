@@ -18,7 +18,8 @@ ENV JUMPSTARTER_VERSION=main \
 
 # install basic packages and common development dependencies
 RUN dnf install -y --setopt=tsflags=nodocs \
-    python3.14 python3.14-devel python3-pip
+    python3.14 python3.14-devel python3-pip \
+    fuse-overlayfs
 
 # install protobuf compiler
 RUN mkdir -p /home/tooling/protobuf && \
@@ -70,6 +71,9 @@ RUN set -e; \
 # clean up
 RUN dnf -y clean all --enablerepo='*' && \
     rm -rf /var/cache/dnf
+
+# Create symbolic links from /home/tooling/ -> /home/user/
+#RUN stow . -t /home/user/ -d /home/tooling/ --no-folding
 
 # A last pass to make sure that an arbitrary user can write in $HOME
 RUN chgrp -R 0 /home && chmod -R g=u /home
