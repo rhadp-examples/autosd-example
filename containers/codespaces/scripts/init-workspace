@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-mkdir -p /home/user/.config/gcloud/configurations
-mkdir -p /home/user/.config/containers/certs.d
+echo "alias python='uv run python'" >> /home/user/.bashrc
+echo "alias pip='uv pip'" >> /home/user/.bashrc
+echo "source /venv/bin/activate" >> /home/user/.bashrc

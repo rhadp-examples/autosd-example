@@ -45,6 +45,14 @@ RUN uv venv /venv && \
     uv pip install -r /tmp/requirements.txt && \
     rm -rf /tmp/requirements.txt
 
+# jmp-login script
+COPY scripts/jmp-login /usr/local/bin/jmp-login
+RUN chmod +x /usr/local/bin/jmp-login
+
+# init-workspace script
+COPY scripts/init-workspace /usr/local/bin/init-workspace
+RUN chmod +x /usr/local/bin/init-workspace
+
 # Install Claude Code, using direct binary download instead of the install.sh script to avoid OOM-killing
 # the binary's post-install setup step in memory-constrained container builds.
 RUN set -e; \
