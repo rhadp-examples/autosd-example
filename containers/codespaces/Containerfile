@@ -19,7 +19,7 @@ ENV JUMPSTARTER_VERSION=main \
 # install basic packages and common development dependencies
 RUN dnf install -y --setopt=tsflags=nodocs \
     python3.14 python3.14-devel python3-pip \
-    fuse-overlayfs
+    fuse-overlayfs rpm-build
 
 # install protobuf compiler
 RUN mkdir -p /home/tooling/protobuf && \
