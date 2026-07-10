@@ -1,5 +1,4 @@
-#FROM registry.redhat.io/devspaces/udi-base-rhel10:3.28.2
-FROM quay.io/devfile/universal-developer-image:ubi10-latest
+FROM ghcr.io/rhadp/codespaces:latest
 
 USER root
 
@@ -9,64 +8,7 @@ ARG TARGETARCH
 ENV ARCH=${TARGETARCH:-arm64} \
     XDG_CONFIG_HOME=/home/tooling/.config 
 
-# set the virtual environment for jumpstarter etc
-ENV UV_PYTHON=python3.14 VIRTUAL_ENV=/venv
-
-# install this repository's version of jumpstarter
-ENV JUMPSTARTER_VERSION=main \
-    JUMPSTARTER_REPO=https://github.com/jumpstarter-dev/jumpstarter
-
-# install basic packages and common development dependencies
-RUN dnf install -y --setopt=tsflags=nodocs \
-    python3.14 python3.14-devel python3-pip \
-    fuse-overlayfs rpm-build
-
-# install protobuf compiler
-RUN mkdir -p /home/tooling/protobuf && \
-    if [ "$ARCH" = "arm64" ]; then \
-        URL=$(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest \
-        | jq -r '.assets[] | select(.name | endswith("linux-aarch_64.zip")) | .browser_download_url') && \
-        curl -LO "$URL"; \
-    else \
-        URL=$(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest \
-        | jq -r '.assets[] | select(.name | endswith("linux-x86_64.zip")) | .browser_download_url') && \
-        curl -LO "$URL"; \
-    fi && \
-    unzip "$(basename "$URL")" -d "/home/tooling/protobuf"
-    
-# install uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv  /bin/uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uvx /bin/uvx
-
-# install jumpstarter & other python dependencies
-COPY requirements.txt /tmp/requirements.txt
-
-RUN uv venv /venv && \
-    uv pip install "git+${JUMPSTARTER_REPO}@${JUMPSTARTER_VERSION}#subdirectory=python/packages/jumpstarter-all" && \
-    uv pip install -r /tmp/requirements.txt && \
-    rm -rf /tmp/requirements.txt
-
-# jmp-login script
-COPY scripts/jmp-login /usr/local/bin/jmp-login
-RUN chmod +x /usr/local/bin/jmp-login
-
-# init-workspace script
-COPY scripts/init-workspace /usr/local/bin/init-workspace
-RUN chmod +x /usr/local/bin/init-workspace
-
-# Install Claude Code, using direct binary download instead of the install.sh script to avoid OOM-killing
-# the binary's post-install setup step in memory-constrained container builds.
-RUN set -e; \
-    mkdir -p /home/tooling/bin /home/tooling/.claude && \
-    arch=$(uname -m | sed 's/x86_64/x64/;s/aarch64/arm64/'); \
-    if ldd /bin/ls 2>&1 | grep -q musl || [ -f /lib/libc.musl-x86_64.so.1 ] || [ -f /lib/libc.musl-aarch64.so.1 ]; then \
-        platform="linux-${arch}-musl"; \
-    else \
-        platform="linux-${arch}"; \
-    fi; \
-    version=$(curl -fsSL https://downloads.claude.ai/claude-code-releases/latest); \
-    curl -fsSL -o /home/tooling/bin/claude "https://downloads.claude.ai/claude-code-releases/${version}/${platform}/claude"; \
-    chmod +x /home/tooling/bin/claude
+# add your customizations here
 
 # clean up
 RUN dnf -y clean all --enablerepo='*' && \
