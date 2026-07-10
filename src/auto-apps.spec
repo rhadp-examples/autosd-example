@@ -1,5 +1,5 @@
 Name:           auto-apps
-Version:        @@VERSION@@
+Version:        0.1
 Release:        1%{?dist}
 Summary:        Sample auto apps
 

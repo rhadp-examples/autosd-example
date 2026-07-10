@@ -15,10 +15,6 @@ components:
       cpuLimit: "4"
       cpuRequest: "1"
       mountSources: true
-      # environment variables
-      #env:
-      #  - name: JUMPSTARTER_GRPC_ENDPOINT
-      #    value: "grpc.rhadp-jumpstarter.apps.CLUSTER_BASE_DOMAIN"
 commands:
   - id: init-workspace
     exec:
