@@ -28,3 +28,4 @@ build-rpm:
 
 clean:
 	rm -rf src/build src/CMakeCache.txt src/cmake_install.cmake src/CMakeFiles src/auto-hello
+	rm -f bin/*.rpm bin/*.tar.gz bin/auto-hello src/Makefile src/*.tar.gz src/*.rpm
