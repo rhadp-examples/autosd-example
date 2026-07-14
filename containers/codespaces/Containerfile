@@ -1,4 +1,6 @@
-FROM ghcr.io/rhadp/codespaces:latest
+#FROM ghcr.io/rhadp/codespaces:latest
+#FROM registry.redhat.io/devspaces/udi-rhel9:3.28.0
+FROM registry.redhat.io/devspaces/udi-base-rhel10:3.29
 
 USER root
 
@@ -6,19 +8,15 @@ ARG TARGETARCH
 
 # install centos stream & fedora repos, other vars
 ENV ARCH=${TARGETARCH:-arm64} \
+    HOME=/home/tooling \
     XDG_CONFIG_HOME=/home/tooling/.config 
 
 # add your customizations here
 
-# clean up
-RUN dnf -y clean all --enablerepo='*' && \
-    rm -rf /var/cache/dnf
-
-# Create symbolic links from /home/tooling/ -> /home/user/
-#RUN stow . -t /home/user/ -d /home/tooling/ --no-folding
 
 # A last pass to make sure that an arbitrary user can write in $HOME
 RUN chgrp -R 0 /home && chmod -R g=u /home
 
-# back to the user
 USER 10001
+ENV HOME=/home/user
+WORKDIR /projects
