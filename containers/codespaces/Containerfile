@@ -1,6 +1,4 @@
-#FROM ghcr.io/rhadp/codespaces:latest
-#FROM registry.redhat.io/devspaces/udi-rhel9:3.28.0
-FROM registry.redhat.io/devspaces/udi-base-rhel10:3.29
+FROM ghcr.io/rhadp/codespaces:latest
 
 USER root
 
