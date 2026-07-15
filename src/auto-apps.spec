@@ -22,7 +22,7 @@ Sample placeholder application for AutoSD
 %cmake_install
 
 %files
-%{_bindir}/auto-hello
+%{_bindir}/auto-app
 
 %changelog
 * Thu Jul 10 2026 Michael Kuehl <mkuehl@redhat.com>

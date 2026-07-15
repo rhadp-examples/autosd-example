@@ -7,9 +7,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(auto-hello main.cpp)
+add_executable(auto-app main.cpp)
 
 install(
-    TARGETS auto-hello
+    TARGETS auto-app
     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT bin
 )

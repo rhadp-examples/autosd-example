@@ -23,7 +23,7 @@ build: clean
 		-w $(PROJECT_DIR)/src \
 		$(CONTAINER_IMAGE) \
 		bash -c "cmake -B build . && cmake --build build && \
-		  cp build/auto-hello /output/"
+		  cp build/auto-app /output/"
 
 build-rpm:
 	$(CONTAINER_TOOL) run --rm \
@@ -50,5 +50,5 @@ build-container:
 		containers/codespaces/
 
 clean:
-	rm -rf src/build src/CMakeCache.txt src/cmake_install.cmake src/CMakeFiles src/auto-hello
-	rm -f bin/*.rpm bin/*.tar.gz bin/auto-hello src/Makefile src/*.tar.gz src/*.rpm
+	rm -rf src/build src/CMakeCache.txt src/cmake_install.cmake src/CMakeFiles src/auto-app
+	rm -f bin/*.rpm bin/*.tar.gz bin/auto-app src/Makefile src/*.tar.gz src/*.rpm

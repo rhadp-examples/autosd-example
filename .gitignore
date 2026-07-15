@@ -20,9 +20,10 @@ env.sh
 **/venv/**
 
 tmp/**
+hack/**
 hack.*
 **hack**.yml
 cheatsheet.md
 .DS_Store
 
-auto-hello
+auto-app
