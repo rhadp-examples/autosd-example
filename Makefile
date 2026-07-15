@@ -14,11 +14,11 @@ BUILD_ARGS ?= --build-arg TARGETARCH=$(shell uname -m | sed 's/x86_64/amd64/')
 PROJECT_DIR := /projects
 
 # AutoSD (RHIVOS) image build
-AUTOSD_MANIFEST ?= manifests/minimal.aib.yml
-AUTOSD_IMAGE ?= images/minimal-autosd.qcow2
+AUTOSD_MANIFEST ?= manifests/auto-app.aib.yml
+AUTOSD_IMAGE ?= images/auto-app-autosd.qcow2
 AUTOSD_TARGET ?= qemu
 
-.PHONY: build build-rpm build-local build-rpm-local build-autosd build-container clean
+.PHONY: build build-rpm build-local build-rpm-local update-repo build-autosd build-container clean
 
 build-local: clean
 	cmake -B src/build src
@@ -66,7 +66,15 @@ build-rpm:
 		  cp \$${NAME}-\$${VERSION}/auto-app.spec ~/rpmbuild/SPECS/ && \
 		  rpmbuild -ba ~/rpmbuild/SPECS/auto-app.spec && \
 		  cp ~/rpmbuild/SOURCES/*.tar.gz /output/ && \
-		  cp ~/rpmbuild/RPMS/*/*.rpm /output/"
+		  cp ~/rpmbuild/RPMS/*/*.rpm /output/ && \
+		  createrepo_c --update /output"
+
+update-repo:
+	$(CONTAINER_TOOL) run --rm \
+		-v "$(CURDIR)/bin:/output" \
+		-w /output \
+		$(CONTAINER_IMAGE) \
+		createrepo_c --update .
 		  
 build-container:
 	$(CONTAINER_TOOL) build $(BUILD_ARGS) \
@@ -84,4 +92,5 @@ build-autosd:
 clean:
 	rm -rf src/build src/CMakeCache.txt src/cmake_install.cmake src/CMakeFiles src/auto-app
 	rm -f bin/*.rpm bin/*.tar.gz bin/auto-app src/Makefile src/*.tar.gz src/*.rpm
+	rm -rf bin/repodata
 	rm -f images/*.qcow2

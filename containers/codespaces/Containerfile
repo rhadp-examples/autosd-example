@@ -11,8 +11,7 @@ ENV ARCH=${TARGETARCH:-arm64} \
 
 # add your customizations here
 
-
-# A last pass to make sure that an arbitrary user can write in $HOME
+    # A last pass to make sure that an arbitrary user can write in $HOME
 RUN chgrp -R 0 /home && chmod -R g=u /home
 
 USER 10001

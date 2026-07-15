@@ -43,7 +43,7 @@ Build a minimal QEMU-bootable image from one of the included manifests:
 
 ```shell
 make build-autosd                                      # uses manifests/minimal.aib.yml
-make build-autosd AUTOSD_MANIFEST=manifests/qm.aib.yml # or pick another
+make build-autosd AUTOSD_MANIFEST=manifests/auto-app.aib.yml # or pick another
 ```
 
 Available manifests:
@@ -89,7 +89,7 @@ See the [aib manifest documentation](https://sigs.centos.org/automotive/latest/d
 Launch the image with `air`, a convenience wrapper around `qemu-system`:
 
 ```shell
-./air --nographics images/minimal-autosd.qcow2
+./air --nographics images/auto-app-autosd.qcow2
 ```
 
 Log in with **root** / **password**, then verify:
@@ -116,6 +116,7 @@ See `./air --help` for the full list.
 ```
 src/                   C++ app source, CMake build, RPM spec
 manifests/             AutoSD image-builder manifests
+    examples/          More manifest examples
 files/                 Quadlet .container units and systemd services
 files/ocp/             OpenShift/Kubernetes deployment files
 containers/codespaces/ Containerfile for the dev/build container
