@@ -18,7 +18,7 @@ AUTOSD_MANIFEST ?= manifests/minimal.aib.yml
 AUTOSD_IMAGE ?= images/minimal-autosd.qcow2
 AUTOSD_TARGET ?= qemu
 
-.PHONY: build build-rpm build-autosd build-container clean
+.PHONY: build build-rpm build-local build-rpm-local build-autosd build-container clean
 	
 build: clean
 	$(CONTAINER_TOOL) run --rm \
@@ -48,7 +48,27 @@ build-rpm:
 		  cp ~/rpmbuild/SOURCES/*.tar.gz /output/ && \
 		  cp ~/rpmbuild/RPMS/*/*.rpm /output/"
 
-build-container: 
+build-local: clean
+	cmake -B src/build src
+	cmake --build src/build
+	cp src/build/auto-app bin/
+
+build-rpm-local:
+	cd /tmp && \
+	  NAME=auto-app && \
+	  VERSION=0.1 && \
+	  RPMBUILD=/tmp/rpmbuild && \
+	  cp -r $(CURDIR)/src $${NAME}-$${VERSION} && \
+	  tar czf $${NAME}-$${VERSION}.tar.gz $${NAME}-$${VERSION} && \
+	  mkdir -p $${RPMBUILD}/{SOURCES,SPECS} && \
+	  cp $${NAME}-$${VERSION}.tar.gz $${RPMBUILD}/SOURCES/ && \
+	  cp $${NAME}-$${VERSION}/auto-app.spec $${RPMBUILD}/SPECS/ && \
+	  rpmbuild --define "_topdir $${RPMBUILD}" -ba $${RPMBUILD}/SPECS/auto-app.spec && \
+	  cp $${RPMBUILD}/SOURCES/*.tar.gz $(CURDIR)/bin/ && \
+	  cp $${RPMBUILD}/RPMS/*/*.rpm $(CURDIR)/bin/ && \
+	  rm -rf $${NAME}-$${VERSION} $${NAME}-$${VERSION}.tar.gz $${RPMBUILD}
+
+build-container:
 	$(CONTAINER_TOOL) build $(BUILD_ARGS) \
 		-f containers/codespaces/Containerfile \
 		-t $(CONTAINER_IMAGE):$(TAG) \
