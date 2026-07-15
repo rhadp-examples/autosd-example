@@ -13,7 +13,12 @@ TAG ?= latest
 BUILD_ARGS ?= --build-arg TARGETARCH=$(shell uname -m | sed 's/x86_64/amd64/')
 PROJECT_DIR := /projects
 
-.PHONY: build build-rpm clean
+# AutoSD (RHIVOS) image build
+AUTOSD_MANIFEST ?= manifests/minimal.aib.yml
+AUTOSD_IMAGE ?= images/minimal-autosd.qcow2
+AUTOSD_TARGET ?= qemu
+
+.PHONY: build build-rpm build-autosd build-container clean
 	
 build: clean
 	$(CONTAINER_TOOL) run --rm \
@@ -49,6 +54,14 @@ build-container:
 		-t $(CONTAINER_IMAGE):$(TAG) \
 		containers/codespaces/
 
+build-autosd:
+	mkdir -p $(dir $(AUTOSD_IMAGE))
+	./auto-image-builder.sh -d build \
+		--target $(AUTOSD_TARGET) \
+		$(AUTOSD_MANIFEST) \
+		$(AUTOSD_IMAGE)
+
 clean:
 	rm -rf src/build src/CMakeCache.txt src/cmake_install.cmake src/CMakeFiles src/auto-app
 	rm -f bin/*.rpm bin/*.tar.gz bin/auto-app src/Makefile src/*.tar.gz src/*.rpm
+	rm -f images/*.qcow2

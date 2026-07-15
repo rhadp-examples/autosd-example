@@ -1,17 +1,23 @@
-# README
+# auto-app
+
+Sample C++ application for AutoSD. Prints a greeting and exits.
 
 ## Building
 
-The apps can be build with cmake like this:
+The recommended way is through the top-level Makefile (runs inside a Podman container, no local toolchain needed):
 
-```
- $ cmake .
- $ make
+```shell
+make build       # compile → bin/auto-app
+make build-rpm   # build RPM → bin/*.rpm
 ```
 
-There is also a makefile that allows building rpms and srpms:
+To build locally with CMake:
 
+```shell
+cmake -B build .
+cmake --build build
 ```
- $ make -f Makefile.rpm srpm
- $ make -f Makefile.rpm rpm
-```
+
+## Packaging
+
+The RPM spec is `auto-app.spec`. It uses CMake macros (`%cmake` / `%cmake_build` / `%cmake_install`) and installs the binary to `/usr/bin/auto-app`.
