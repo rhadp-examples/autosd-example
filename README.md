@@ -57,6 +57,33 @@ Available manifests:
 | `qm-container.aib.yml` | Containerised services inside the QM partition |
 | `static-ip.aib.yml` | Static network configuration |
 
+## About automotive-image-builder
+
+[automotive-image-builder (aib)](https://gitlab.com/CentOS/automotive/src/automotive-image-builder) is the tool that turns declarative YAML manifests into bootable OS images. It uses [osbuild](https://www.osbuild.org/) under the hood and produces immutable, atomically-updatable images based on [bootc](https://containers.github.io/bootc/).
+
+This repo includes two helpers from the aib project:
+
+- **`auto-image-builder.sh`** — a wrapper script that runs `aib` inside a privileged container (`quay.io/centos-sig-automotive/automotive-image-builder`), so you don't need to install osbuild and its dependencies locally. It mounts the current directory into the container and passes all arguments through to `aib`. Requires rootful Podman. It refuses to run inside a container (e.g. DevSpaces) — use a native host or a Podman machine.
+- **`air`** — launches a QCOW2 image in a QEMU virtual machine.
+
+### Manifest format
+
+Manifests (`.aib.yml`) are declarative YAML files. Key top-level sections:
+
+| Key | Purpose |
+|-----|---------|
+| `content.rpms` | Packages to install |
+| `content.repos` | Additional RPM repositories |
+| `content.container_images` | Embed OCI images (available to podman at boot) |
+| `content.add_files` | Copy extra files into the image |
+| `qm` | Configure a QM (Quality-Managed) safety partition with its own `content` block |
+| `auth` | Set root password or SSH keys |
+| `network` | Static IP, DNS, gateway configuration |
+
+Once a system is running, it can update in place via `bootc switch` / `bootc update` from a newer container image — no re-flash needed.
+
+See the [aib manifest documentation](https://sigs.centos.org/automotive/latest/developer-guide/build-an-image/index.html) for the full schema.
+
 ## Run the image
 
 Launch the image with `air`, a convenience wrapper around `qemu-system`:
