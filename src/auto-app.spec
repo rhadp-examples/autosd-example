@@ -1,10 +1,10 @@
-Name:           auto-apps
+Name:           auto-app
 Version:        0.1
 Release:        1%{?dist}
 Summary:        Sample auto apps
 
 License:        MIT
-Source0:        auto-apps-%{version}.tar.gz
+Source0:        auto-app-%{version}.tar.gz
 
 BuildRequires:  cmake make gcc-c++
 

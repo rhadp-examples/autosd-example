@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(auto-apps VERSION 0.1.0 LANGUAGES CXX)
+project(auto-app VERSION 0.1.0 LANGUAGES CXX)
 
 include(GNUInstallDirs)
 

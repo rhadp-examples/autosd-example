@@ -3,7 +3,7 @@ Description=Demo radio service container
 Wants=engine.service
 
 [Container]
-Image=localhost/auto-apps
+Image=localhost/auto-app
 Volume=/run/vsomeip:/run/vsomeip
 Exec=/usr/bin/radio-service
 

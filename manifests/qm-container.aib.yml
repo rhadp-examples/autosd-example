@@ -13,9 +13,9 @@ content:
 qm:
   content:
     container_images:
-      - source: registry.gitlab.com/centos/automotive/sample-images/demo/auto-apps
+      - source: registry.gitlab.com/centos/automotive/sample-images/demo/auto-app
         tag: latest
-        name: localhost/auto-apps
+        name: localhost/auto-app
     add_files:
       - path: /etc/containers/systemd/radio.container
         source_path: ../files/radio-qm.container

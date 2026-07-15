@@ -3,7 +3,7 @@ Description=Demo engine service container
 Requires=routingmanagerd.socket
 
 [Container]
-Image=localhost/auto-apps
+Image=localhost/auto-app
 Volume=/run/vsomeip:/run/vsomeip
 Exec=/usr/bin/engine-service
 

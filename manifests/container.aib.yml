@@ -9,12 +9,12 @@ content:
       baseurl: https://download.copr.fedorainfracloud.org/results/alexl/cs9-sample-images/centos-stream-9-$arch/
   rpms:
     - curl
-    - auto-apps
+    - auto-app
     - vsomeip3-routingmanager
   container_images:
-    - source: registry.gitlab.com/centos/automotive/sample-images/demo/auto-apps
+    - source: registry.gitlab.com/centos/automotive/sample-images/demo/auto-app
       tag: latest
-      name: localhost/auto-apps
+      name: localhost/auto-app
   add_files:
     - path: /etc/containers/systemd/radio.container
       source_path: ../files/radio.container

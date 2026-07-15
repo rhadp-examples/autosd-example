@@ -32,14 +32,14 @@ build-rpm:
 		-w /tmp \
 		$(CONTAINER_IMAGE) \
 		bash -c "\
-		  NAME=auto-apps && \
+		  NAME=auto-app && \
 		  VERSION=0.1 && \
 		  cp -r $(PROJECT_DIR)/src \$${NAME}-\$${VERSION} && \
 		  tar czf \$${NAME}-\$${VERSION}.tar.gz \$${NAME}-\$${VERSION} && \
 		  mkdir -p ~/rpmbuild/{SOURCES,SPECS} && \
 		  cp \$${NAME}-\$${VERSION}.tar.gz ~/rpmbuild/SOURCES/ && \
-		  cp \$${NAME}-\$${VERSION}/auto-apps.spec ~/rpmbuild/SPECS/ && \
-		  rpmbuild -ba ~/rpmbuild/SPECS/auto-apps.spec && \
+		  cp \$${NAME}-\$${VERSION}/auto-app.spec ~/rpmbuild/SPECS/ && \
+		  rpmbuild -ba ~/rpmbuild/SPECS/auto-app.spec && \
 		  cp ~/rpmbuild/SOURCES/*.tar.gz /output/ && \
 		  cp ~/rpmbuild/RPMS/*/*.rpm /output/"
 
