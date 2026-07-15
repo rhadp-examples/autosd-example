@@ -11,7 +11,7 @@ TAG ?= latest
 
 # Build arguments
 BUILD_ARGS ?= --build-arg TARGETARCH=$(shell uname -m | sed 's/x86_64/amd64/')
-PROJECT_DIR      := /projects
+PROJECT_DIR := /projects
 
 .PHONY: build build-rpm clean
 	
