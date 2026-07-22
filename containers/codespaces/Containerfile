@@ -10,26 +10,6 @@ ENV ARCH=${TARGETARCH:-arm64} \
     APP_ROOT=/home/tooling \
     XDG_CONFIG_HOME=/home/tooling/.config 
 
-# set the virtual environment for jumpstarter etc
-ENV UV_PYTHON=python3.14 VIRTUAL_ENV=/venv
-
-# add your customizations here
-# install this repository's version of jumpstarter
-ENV JUMPSTARTER_VERSION=main \
-    JUMPSTARTER_REPO=https://github.com/jumpstarter-dev/jumpstarter
-
-# install jumpstarter & other python dependencies
-COPY requirements.txt /tmp/requirements.txt
-
-RUN uv venv --clear /venv && \
-    uv pip install -r /tmp/requirements.txt && \
-    uv pip install "git+${JUMPSTARTER_REPO}@${JUMPSTARTER_VERSION}#subdirectory=python/packages/jumpstarter-all" && \
-    rm -rf /tmp/requirements.txt
-
-# jmp-login script
-COPY scripts/jmp-login /usr/local/bin/jmp-login
-RUN chmod +x /usr/local/bin/jmp-login
-
 # Install Claude Code, using direct binary download instead of the install.sh script to avoid OOM-killing
 # the binary's post-install setup step in memory-constrained container builds.
 RUN set -e; \
@@ -43,6 +23,25 @@ RUN set -e; \
     version=$(curl -fsSL https://downloads.claude.ai/claude-code-releases/latest); \
     curl -fsSL -o /home/tooling/bin/claude "https://downloads.claude.ai/claude-code-releases/${version}/${platform}/claude"; \
     chmod +x /home/tooling/bin/claude
+
+# set the virtual environment for jumpstarter etc
+ENV UV_PYTHON=python3.14 VIRTUAL_ENV=/venv
+
+# install this repository's version of jumpstarter
+ENV JUMPSTARTER_VERSION=main \
+    JUMPSTARTER_REPO=https://github.com/mickume/jumpstarter
+
+# install jumpstarter & other python dependencies
+COPY requirements.txt /tmp/requirements.txt
+
+RUN uv venv --clear /venv && \
+    uv pip install -r /tmp/requirements.txt && \
+    uv pip install "git+${JUMPSTARTER_REPO}@${JUMPSTARTER_VERSION}#subdirectory=python/packages/jumpstarter-all" && \
+    rm -rf /tmp/requirements.txt
+
+# jmp-login script
+COPY scripts/jmp-login /usr/local/bin/jmp-login
+RUN chmod +x /usr/local/bin/jmp-login
 
 # A last pass to make sure that an arbitrary user can write in $HOME
 RUN chgrp -R 0 /home && chmod -R g=u /home
