@@ -1,6 +1,6 @@
 schemaVersion: 2.3.0
 metadata:
-  name: autosd-quickstart
+  name: autosd-example
   tags:
     - rhivos
     - autosd
