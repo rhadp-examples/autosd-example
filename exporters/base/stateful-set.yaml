@@ -157,8 +157,30 @@ spec:
               # remove the exporter config
               rm ./dummy.yaml
 
+              # detect the endpoint
+              while [ -z "$ENDPOINT" ]
+              do
+                ENDPOINT=$(kubectl get -n $JMP_NAMESPACE \
+                  exporters.jumpstarter.dev $(cat /etc/hostname) -o jsonpath="{.status.endpoint}")
+                sleep 1s
+              done
+              echo "$ENDPOINT" > endpoint
 
-
+              cat <<EOF > basic-exporter.yaml
+              apiVersion: jumpstarter.dev/v1alpha1
+              kind: ExporterConfig
+              metadata:
+                namespace: $JMP_NAMESPACE
+                name: $(cat /etc/hostname)
+              endpoint: $(cat endpoint)
+              tls:
+                ca: ''
+                insecure: true
+              token: $(cat token)
+              export:
+                power:
+                  type: jumpstarter_driver_power.driver.MockPower
+              EOF
 
 
               
