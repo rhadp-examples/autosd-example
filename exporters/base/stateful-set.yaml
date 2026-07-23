@@ -147,6 +147,43 @@ spec:
 
               oc config use-context basic-exporter-ctx
 
+              # create the exporter config
+              EXPORTER_NAME=$(cat /etc/hostname)
+
+              jmp admin create exporter "$EXPORTER_NAME" -n $JMP_NAMESPACE --label platform=arm --label type=test --save --insecure-tls --nointeractive --out ./dummy.yaml
+              TOKEN=$(yq '.token' dummy.yaml)
+              echo "$TOKEN" > token
+
+              # remove the exporter config
+              rm ./dummy.yaml
+
+              # detect the endpoint
+              while [ -z "$ENDPOINT" ]
+              do
+                ENDPOINT=$(kubectl get -n $(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace) \
+                  exporters.jumpstarter.dev $(cat /etc/hostname) -o jsonpath="{.status.endpoint}")
+                sleep 1s
+              done
+              echo "$ENDPOINT" > endpoint
+
+              cat <<EOF > basic-exporter.yaml
+              apiVersion: jumpstarter.dev/v1alpha1
+              kind: ExporterConfig
+              metadata:
+                namespace: $(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
+                name: $(cat /etc/hostname)
+              endpoint: $(cat endpoint)
+              tls:
+                ca: ''
+                insecure: true
+              token: $(cat token)
+              export:
+                power:
+                  type: jumpstarter_driver_power.driver.MockPower
+              EOF
+
+
+
 
 
               
