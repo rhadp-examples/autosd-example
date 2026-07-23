@@ -19,7 +19,7 @@ metadata:
   name: qemu-exporter-image-puller
   annotations:
     argocd.argoproj.io/sync-wave: "-1"
-  namespace: automotive-dev-operator-system # TODO change to auto-builder
+  namespace: auto-builder #automotive-dev-operator-system # TODO change to auto-builder
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
