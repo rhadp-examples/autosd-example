@@ -2,6 +2,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: basic-exporter-rolebinding
+  namespace: "auto-jumpstarter"
   annotations:
     argocd.argoproj.io/sync-wave: "-1"
 roleRef:
@@ -11,15 +12,15 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: basic-exporter
-    namespace: "auto-jumpstarter"
+    namespace:  "auto-exporters"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: basic-exporter-image-puller
+  namespace: auto-builder 
   annotations:
     argocd.argoproj.io/sync-wave: "-1"
-  namespace: auto-builder #automotive-dev-operator-system # TODO change to auto-builder
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
