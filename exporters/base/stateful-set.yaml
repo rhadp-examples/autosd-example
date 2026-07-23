@@ -43,9 +43,6 @@ spec:
         - name: jumpstarter-init
           image: ghcr.io/rhadp/runtime:latest
           imagePullPolicy: Always
-          volumeMounts:
-            - mountPath: /shared
-              name: shared
           command:
             - /bin/bash
             - -c
