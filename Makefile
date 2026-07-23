@@ -18,6 +18,9 @@ AUTOSD_MANIFEST ?= manifests/auto-app.aib.yml
 AUTOSD_IMAGE ?= images/auto-app-autosd.qcow2
 AUTOSD_TARGET ?= qemu
 
+JUMPSTARTER_REPO ?= https://github.com/mickume/jumpstarter
+JUMPSTARTER_VERSION ?= main
+
 .PHONY: build build-rpm build-local build-rpm-local update-repo build-autosd build-container clean
 
 build-local: clean
@@ -88,6 +91,12 @@ build-autosd:
 		--target $(AUTOSD_TARGET) \
 		$(AUTOSD_MANIFEST) \
 		$(AUTOSD_IMAGE)
+
+local-venv:
+	uv venv --clear venv
+	source venv/bin/activate && \
+	uv pip install -r containers/codespaces/requirements.txt && \
+	uv pip install "git+$(JUMPSTARTER_REPO)@$(JUMPSTARTER_VERSION)#subdirectory=python/packages/jumpstarter-all"
 
 clean:
 	rm -rf src/build src/CMakeCache.txt src/cmake_install.cmake src/CMakeFiles src/auto-app
