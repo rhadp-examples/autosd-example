@@ -182,9 +182,12 @@ spec:
                   type: jumpstarter_driver_power.driver.MockPower
               EOF
 
+              sleep 60s
 
-              
+              echo "Starting the exporter ..."
 
-              while true; do
-                sleep 30s
-              done
+              jmp run --exporter-config basic-exporter.yaml
+
+              #while true; do
+              #  sleep 30s
+              #done
