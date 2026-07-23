@@ -154,39 +154,7 @@ spec:
               TOKEN=$(yq '.token' dummy.yaml)
               echo "$TOKEN" > /shared/token
 
-              # remove the exporter config
-              rm ./dummy.yaml
-
-              # detect the endpoint
-              while [ -z "$ENDPOINT" ]
-              do
-                ENDPOINT=$(kubectl get -n $(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace) \
-                  exporters.jumpstarter.dev $(cat /etc/hostname) -o jsonpath="{.status.endpoint}")
-                sleep 1s
-              done
-              echo "$ENDPOINT" > /shared/endpoint
-
-              cat <<EOF > basic-exporter.yaml
-              apiVersion: jumpstarter.dev/v1alpha1
-              kind: ExporterConfig
-              metadata:
-                namespace: $(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
-                name: $(cat /etc/hostname)
-              endpoint: $(cat /shared/endpoint)
-              tls:
-                ca: ''
-                insecure: true
-              token: $(cat /shared/token)
-              export:
-                power:
-                  type: jumpstarter_driver_power.driver.MockPower
-              EOF
-
-              sleep 60s
-
-              echo "Starting the exporter ..."
-
-              #jmp run --exporter-config basic-exporter.yaml
+              
 
               while true; do
                 sleep 30s
