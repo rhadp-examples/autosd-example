@@ -43,6 +43,9 @@ spec:
         - name: jumpstarter-init
           image: ghcr.io/rhadp/runtime:latest
           imagePullPolicy: Always
+          env:
+            - name: JMP_NAMESPACE
+              value: "auto-jumpstarter"
           command:
             - /bin/bash
             - -c
@@ -74,9 +77,9 @@ spec:
               # check if exporter already exists and delete it if so ...
 
               EXPORTER_NAME=$(cat /etc/hostname)
-              if oc get exporter "$EXPORTER_NAME" -n $NAMESPACE &>/dev/null; then
+              if oc get exporter "$EXPORTER_NAME" -n $JMP_NAMESPACE &>/dev/null; then
                 echo "Exporter '$EXPORTER_NAME' already exists, deleting it now ..."
-                oc delete exporter "$EXPORTER_NAME" -n $NAMESPACE || true
+                oc delete exporter "$EXPORTER_NAME" -n $JMP_NAMESPACE || true
               fi
 
       containers:
@@ -100,6 +103,8 @@ spec:
           env:
             - name: JUMPSTARTER_GRPC_INSECURE
               value: "1"
+            - name: JMP_NAMESPACE
+              value: "auto-jumpstarter"
             - name: OCI_USERNAME
               value: "serviceaccount"
             - name: OCI_PASSWORD_FILE
@@ -145,7 +150,7 @@ spec:
               # create the exporter config
               EXPORTER_NAME=$(cat /etc/hostname)
               
-              jmp admin create exporter "$EXPORTER_NAME" -n $NAMESPACE --label platform=arm --label type=test --save --insecure-tls --nointeractive --out ./dummy.yaml
+              jmp admin create exporter "$EXPORTER_NAME" -n $JMP_NAMESPACE --label platform=arm --label type=test --save --insecure-tls --nointeractive --out ./dummy.yaml
               TOKEN=$(yq '.token' dummy.yaml)
               echo "$TOKEN" > /shared/token
 
@@ -160,10 +165,6 @@ spec:
                 sleep 1s
               done
               echo "$ENDPOINT" > /shared/endpoint
-
-              # NOTE: Do NOT export OCI_PASSWORD here. The OCI_PASSWORD_FILE env var
-              # tells the QEMU driver to read the SA token fresh from disk on every
-              # flash, so credentials survive kubelet token rotation.
 
               cat <<EOF > basic-exporter.yaml
               apiVersion: jumpstarter.dev/v1alpha1
