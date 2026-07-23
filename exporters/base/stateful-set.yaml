@@ -185,8 +185,8 @@ spec:
 
               echo "Starting the exporter ..."
 
-              jmp run --exporter-config basic-exporter.yaml
+              #jmp run --exporter-config basic-exporter.yaml
 
-              #while true; do
-              #  sleep 30s
-              #done
+              while true; do
+                sleep 30s
+              done
